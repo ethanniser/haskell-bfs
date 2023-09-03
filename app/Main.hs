@@ -35,20 +35,14 @@ solve :: Maze -> Maybe Solution
 solve (Maze start end graph) = bfs [(start, [start])] S.empty
   where
     bfs :: [(Int, [Int])] -> S.Set Int -> Maybe Solution
-    bfs [] _ = Nothing -- Queue is empty, so no solution
+    bfs [] _ = Nothing
     bfs ((currentVertex, currentPath) : restOfQueue) visited
-      | currentVertex == end = Just (Solution currentPath) -- Found the end vertex, return the solution
-      -- Haven't found the end yet, so keep searching
-      | otherwise = case M.lookup currentVertex graph of -- get current vertex's neighbors from map
+      | currentVertex == end = Just (Solution currentPath)
+      | otherwise = case M.lookup currentVertex graph of
           Just neighbors ->
-            -- only look at neighbors that haven't been visited yet
             let newNeighbors = filter (`S.notMember` visited) neighbors
-                -- for each neighbor make a tuple of (neighbor, path to neighbor)
-                -- where the path is the current path plus the neighbor
                 newPaths = [(n, currentPath ++ [n]) | n <- newNeighbors]
-                -- and these new paths to the queue
                 newQueue = restOfQueue ++ newPaths
-                -- and add these new neighbors to the visited set
                 newVisited = foldl (\set (vertex, _) -> S.insert vertex set) visited newPaths
-             in bfs newQueue newVisited -- continue searching with the new queue and visited set
-          Nothing -> bfs restOfQueue visited -- this node is a dead end, so just continue checking the rest of the queue
+             in bfs newQueue newVisited
+          Nothing -> bfs restOfQueue visited
