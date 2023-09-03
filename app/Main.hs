@@ -38,5 +38,5 @@ solve (Maze start end graph) = bfs [(start, [start])] M.empty
     bfs ((currentVertex, currentPath) : restOfQueue) visited
       | currentVertex == end = Just (Solution currentPath) -- Found the end vertex, return the solution
       | otherwise = case M.lookup currentVertex graph of
-          Just neighbors -> _a
+          Just neighbors -> undefined
           Nothing -> Nothing -- this node is a dead end
