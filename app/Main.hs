@@ -42,6 +42,7 @@ solve (Maze start end graph) = bfs [(start, [start])] S.empty
           Just neighbors ->
             let newNeighbors = filter (`S.notMember` visited) neighbors
                 newPaths = [(n, currentPath ++ [n]) | n <- newNeighbors]
+                -- dfs: newQueue = newPaths ++ restOfQueue
                 newQueue = restOfQueue ++ newPaths
                 newVisited = foldl (\set (vertex, _) -> S.insert vertex set) visited newPaths
              in bfs newQueue newVisited
